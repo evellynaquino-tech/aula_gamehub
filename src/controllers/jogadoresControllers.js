@@ -1,25 +1,21 @@
-import * as jogadoresModel from "./models/jogadoresModel.js";
+import * as jogadoresModel from "../models/jogosModel.js";
 import { textoValido } from "../utils/validacoes.js";
 
 export function listar(req, res, next) {
-  conexao.query("SELECT * FROM jogadores ORDER BY id", (erro, resultado) => {
+  jogadoresModel.listar((erro, resultado) => {
     if (erro) return next(erro);
     return res.status(200).json(resultado);
   });
 }
 
 export function buscarPorId(req, res, next) {
-  conexao.query(
-    "SELECT * FROM jogadores WHERE id = ?",
-    [req.id],
-    (erro, resultado) => {
-      if (erro) return next(erro);
-      if (resultado.length === 0) {
-        return res.status(404).json({ erro: "Jogador não encontrado" });
-      }
-      return res.status(200).json(resultado[0]);
-    },
-  );
+  jogadoresModel.buscarPorId(req.id, (erro, resultado) => {
+    if (erro) return next(erro);
+    if (resultado.length === 0) {
+      return res.status(404).json({ erro: "Jogador não encontrado" });
+    }
+    return res.status(200).json(resultado[0]);
+  });
 }
 
 export function criar(req, res, next) {
@@ -41,9 +37,10 @@ export function criar(req, res, next) {
     nickname: nickname.trim(),
   };
 
-  conexao.query(
-    "INSERT INTO jogadores (nome, email, nickname) VALUES (?, ?, ?)",
-    [dados.nome, dados.email, dados.nickname],
+  jogadoresModel.criar(
+    dados.nome,
+    dados.email,
+    dados.nickname,
     (erro, resultado) => {
       if (erro) return next(erro);
       return res.status(201).json({
@@ -74,38 +71,30 @@ export function atualizar(req, res, next) {
   };
 
   // Consulta didática para confirmar que o registro existe antes de editar.
-  conexao.query(
-    "SELECT * FROM jogadores WHERE id = ?",
-    [req.id],
-    (erro, registros) => {
-      if (erro) return next(erro);
-      if (registros.length === 0) {
-        return res.status(404).json({ erro: "Jogador não encontrado" });
-      }
-      conexao.query(
-        "UPDATE jogadores SET nome = ?, email = ?, nickname = ? WHERE id = ?",
-        [dados.nome, dados.email, dados.nickname, req.id],
-        (erro, resultado) => {
-          if (erro) return next(erro);
-          return res
-            .status(200)
-            .json({ mensagem: "Jogador atualizado com sucesso" });
-        },
-      );
-    },
-  );
+  jogadoresModel.buscarPorId(req.id, (erro, registros) => {
+    if (erro) return next(erro);
+    if (registros.length === 0) {
+      return res.status(404).json({ erro: "Jogador não encontrado" });
+    }
+    jogadoresModel.atualizar(
+      "UPDATE jogadores SET nome = ?, email = ?, nickname = ? WHERE id = ?",
+      [dados.nome, dados.email, dados.nickname, req.id],
+      (erro, resultado) => {
+        if (erro) return next(erro);
+        return res
+          .status(200)
+          .json({ mensagem: "Jogador atualizado com sucesso" });
+      },
+    );
+  });
 }
 
 export function excluir(req, res, next) {
-  conexao.query(
-    "DELETE FROM jogadores WHERE id = ?",
-    [req.id],
-    (erro, resultado) => {
-      if (erro) return next(erro);
-      if (resultado.affectedRows === 0) {
-        return res.status(404).json({ erro: "Jogador não encontrado" });
-      }
-      return res.status(200).json({ mensagem: "Jogador excluído com sucesso" });
-    },
-  );
+  jogadoresModel.excluir(req.id, (erro, resultado) => {
+    if (erro) return next(erro);
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({ erro: "Jogador não encontrado" });
+    }
+    return res.status(200).json({ mensagem: "Jogador excluído com sucesso" });
+  });
 }

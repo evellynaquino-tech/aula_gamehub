@@ -6,11 +6,11 @@ import mysql from "mysql2";
 
 const conexao = mysql.createConnection({
   host: process.env.DB_HOST || "localhost",
-  port: Number(process.env.PORT) || 3306,
-  user: process.env.USER || "root",
+  // Alterado para DB_PORT para não usar a porta do servidor Express (como 3000)
+  port: Number(process.env.DB_PORT) || 3306, 
+  user: process.env.DB_USER || process.env.USER || "root", // Garante o usuário correto
   password: process.env.DB_PASS || "1234",
   database: process.env.DB_NAME || "gamehub_db",
 });
 
-// module.exports = conexao;
 export default conexao;

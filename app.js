@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 
 // #region estudios
 
-app.use("/estudio", estudioRoute);
+app.use("/estudios", estudioRoute);
 
 // #endregion estudios
 // #region jogos
@@ -39,10 +39,10 @@ app.use("/jogadores", jogadoresRoute);
 
 // #endregion jogadores
 
-app.use((req, res) => {
-  res.status(404).json({ erro: "Rota não encontrada" });
-});
-app.use(tratarErro);
+// app.use((req, res) => {
+//   res.status(404).json({ erro: "Rota não encontrada" });
+// });
+// app.use(tratarErro);
 
 conexao.connect((erro) => {
   if (erro) {

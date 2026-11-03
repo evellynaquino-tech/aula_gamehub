@@ -15,7 +15,7 @@ export function criar(dados, callback) {
     "INSERT INTO jogos (titulo, ano_lancamento, estudio_id) VALUES (?, ?, ?)";
   conexao.query(
     sql,
-    [dados.titulo, dados.ano_lancamento, estudio_id],
+    [dados.titulo, dados.ano_lancamento, dados.estudio_id], 
     callback,
   );
 }
@@ -25,7 +25,7 @@ export function atualizar(id, dados, callback) {
     "UPDATE jogos SET titulo = ?, ano_lancamento = ?, estudio_id = ? WHERE id = ?";
   conexao.query(
     sql,
-    [dados.titulo, dados.ano_lancamento, estudio_id, id],
+    [dados.titulo, dados.ano_lancamento, dados.estudio_id, id],
     callback,
   );
 }

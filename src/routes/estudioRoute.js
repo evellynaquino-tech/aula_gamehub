@@ -1,13 +1,13 @@
 import { Router } from "express";
-import * as estudioController from "../controllers/estudioControllers.js";
-import validarId from "../middlewares/validarId";
+import * as estudioController from "../controllers/estudiosControllers.js";
+import validarId from "../middlewares/validarId.js";
 
-const Router = Router();
+const router = Router();
 
-router.get("/estudios", estudioController.listar);
-router.get("/estudios/:id", validarId, estudioController.buscarPorId);
-router.post("/estudios", estudioController.criar);
-router.put("/estudios/:id", validarId, estudioController.atualizar);
-router.delete("/estudios/:id", validarId, estudioController.excluir);
+router.get("/", estudioController.listar);
+router.get("/:id", validarId, estudioController.buscarPorId);
+router.post("/", estudioController.criar);
+router.put("/:id", validarId, estudioController.atualizar);
+router.delete("/:id", validarId, estudioController.excluir);
 
 export default router;
